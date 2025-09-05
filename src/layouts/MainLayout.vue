@@ -1,24 +1,76 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh Lpr lFf">
+    <!-- <q-header elevated class="bg-blue-grey-6">
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
-    </q-header>
+    </q-header> -->
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+    <q-drawer
+      v-model="drawer"
+      :mini="miniState"
+      :width="200"
+      show-if-above
+      :breakpoint="700"
+      :mini-width="70"
+      @mouseenter="miniState = false"
+      @mouseleave="miniState = true"
+      mini-to-overlay
+      class="text-black"
+      :class="[$q.dark.isActive ? 'bg-grey-9' : 'bg-brand']"
+    >
+      <q-img
+        v-if="!miniState"
+        class="absolute-top"
+        src="../assets/logo.png"
+        style="height: 150px"
+      />
+      <q-img
+        v-if="miniState"
+        class="absolute-top q-mt-lg"
+        src="../assets/minilogo.png"
+        style="height: 50px"
+      />
+      <q-list
+        :style="{
+          height: 'calc(100% - 150px)',
+          marginTop: miniState ? '80px' : '150px',
+        }"
+      >
+        <q-item
+          clickable
+          v-ripple
+          name="dashboard"
+          :style="{ backgroundColor: activeTab === 'dashboard' ? '#3b475f' : '#1f2a40' }"
+          @click="activeTab = 'dashboard'"
+          to="/"
+          exact
+        >
+          <q-item-section avatar>
+            <q-icon name="dashboard" color="grey-6" />
+          </q-item-section>
+          <q-item-section class="text-grey-6">Dashboard</q-item-section>
+        </q-item>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+        <q-item
+          clickable
+          v-ripple
+          name="about"
+          :style="{ backgroundColor: activeTab === 'about' ? '#3b475f' : '#1f2a40' }"
+          @click="activeTab = 'about'"
+          to="/about"
+        >
+          <q-item-section avatar>
+            <q-icon name="person" color="grey-6" />
+          </q-item-section>
+          <q-item-section class="text-grey-6">about</q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <!-- <q-btn dense flat icon="menu" @click="mini = !mini" /> -->
+
+    <q-page-container class="bg-body">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -26,56 +78,24 @@
 
 <script setup>
 import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+const drawer = ref(false)
+const miniState = ref(false)
+const activeTab = ref('dashboard')
+// const leftDrawerOpen = ref(false)
+// const toggleLeftDrawer = () => {
+//   // miniState.value = true
+//   drawer.value = true
+// }
+// const drawerClick = (e) => {
+//   if (miniState.value) {
+//     miniState.value = false
+//     e.stopPropagation()
+//   }
+// }
 </script>
+<style lang="sass">
+.my-menu-link
+  color: white
+  background: #607d8b
+</style>
